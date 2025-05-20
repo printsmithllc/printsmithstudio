@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Printsmith Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Printsmith Studio</h1>
+    <p>Custom Prints • Rapid Prototyping • Montana-Based</p>
+  </header>
+
+  <section class="upload">
+    <h2>Upload Your STL File for Estimate</h2>
+    <form id="estimateForm">
+      <input type="file" id="stlFile" accept=".stl" required />
+      <label for="material">Choose Material:</label>
+      <select id="material" required>
+        <option value="pla">PLA ($0.10/cm³)</option>
+        <option value="abs">ABS ($0.12/cm³)</option>
+        <option value="resin">Resin ($0.15/cm³)</option>
+      </select>
+      <button type="submit">Estimate Cost</button>
+    </form>
+    <p id="costResult" style="margin-top:10px; font-weight:bold;"></p>
+  </section>
+
+  <section class="about">
+    <h2>About Us</h2>
+    <p>We're passionate makers based in Montana offering top-notch 3D printing services. Whether you need one prototype or a batch of parts, we've got you covered.</p>
+  </section>
+
+  <section class="gallery">
+    <h2>Gallery</h2>
+    <div class="images">
+      <img src="images/print1.jpg" alt="3D print 1" />
+      <img src="images/print2.jpg" alt="3D print 2" />
+      <img src="images/print3.jpg" alt="3D print 3" />
+    </div>
+  </section>
+
+  <section class="contact">
+    <h2>Contact Us</h2>
+    <form>
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    &copy; 2025 Printsmith Studio
+  </footer>
+
+  <script>
+    document.getElementById("estimateForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById("stlFile");
+      const material = document.getElementById("material").value;
+      const formData = new FormData();
+      formData.append("stl", fileInput.files[0]);
+      formData.append("material", material);
+      const res = await fetch("https://your-backend-url.onrender.com/estimate", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      document.getElementById("costResult").innerText = 
+        `Estimated Volume: ${data.volume.toFixed(2)} cm³\nEstimated Cost: $${data.cost.toFixed(2)}`;
+    });
+  </script>
+</body>
+</html>
